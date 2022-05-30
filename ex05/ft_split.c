@@ -6,7 +6,7 @@
 /*   By: yrabby <yrabby@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 15:04:25 by yrabby            #+#    #+#             */
-/*   Updated: 2022/05/30 16:45:56 by yrabby           ###   ########.fr       */
+/*   Updated: 2022/05/30 17:47:32 by yrabby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	count_word(char *s, char* sep, unsigned int sep_len)
 		if (ft_strncmp(s, sep, sep_len) == 0)
 		{
 			s = s + sep_len;
-			++i; // not true
+			++i;
 		}
 		else if (*s)
 			++s;
@@ -63,25 +63,78 @@ int	count_word(char *s, char* sep, unsigned int sep_len)
 	return (i);
 }
 
+char	*create_str(char *s, char *sep, unsigned int sep_len, char **ret)
+{
+	int		i;
+	char	*new_str;
+	
+	i = 0;
+	while (s[i] && ft_strncmp(&(s[i]), sep, sep_len) != 0)
+		++i;
+	new_str = (char *)malloc(sizeof(char) * (i + 1));
+	if (!new_str)
+		return (NULL);
+	*ret = new_str;
+	while (*s && ft_strncmp(s, sep, sep_len) != 0)
+	{
+		*new_str = *s;
+		++s;
+		++new_str;
+	}
+	*new_str = 0;
+
+	return (s);
+}
+
 char	**ft_split(char *str, char *charset)
 {
 	unsigned int	sep_len;
 	int				c;
-	char			*ret;
+	int				i;
+	char			**ret;
 
 	sep_len = 0;
 	while (charset[sep_len])
 		++sep_len;
 	c = count_word(str, charset, sep_len);
-	ret = (char *)malloc(sizeof(char) * c + 1);
+	ret = (char **)malloc(sizeof(char *) * c + 1);
 	if (!ret)
 		return (NULL);
-	
+	ret[c] = NULL;
+	i = 0;
+	while (ft_strncmp(str, charset, sep_len) == 0)
+		str = str + sep_len;
+	while (i < c)
+	{
+		str = create_str(str, charset, sep_len, &(ret[i]));
+		// if (ret[i] == NULL)
+		// {
+		// 	free_all();
+		// }
+		while (ft_strncmp(str, charset, sep_len) == 0)
+			str = str + sep_len;
 
+		++i;
+	}
 	return (ret);
+}
+
+void	print_arr(char **a)
+{
+	int	i = 0;
+
+	while (a[i] != NULL)
+	{
+		printf("%s\n", a[i]);
+		++i;
+	}
 }
 
 int	main(void)
 {
-	ft_split("----------------", "--");
+	char **ret;
+
+	ret = ft_split("a--b--ffff--", "--");
+	print_arr(ret);
+
 }
