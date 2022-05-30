@@ -6,7 +6,7 @@
 /*   By: yrabby <yrabby@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:27:58 by yrabby            #+#    #+#             */
-/*   Updated: 2022/05/30 14:34:10 by yrabby           ###   ########.fr       */
+/*   Updated: 2022/05/30 14:59:44 by yrabby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,13 +52,17 @@ long	ft_atoi_base(char *n, char *base_str, long base)
 {
 	long	ret;
 	long	sign;
+	long	i;
 
 	n = skip_space(n);
 	n = skip_get_sign(n, &sign);
 	ret = 0;
 	while (*n)
 	{
-		ret = (ret * base) + get_num_by_base(*n, base_str);
+		i = get_num_by_base(*n, base_str);
+		if (i == base)
+			break ;
+		ret = (ret * base) + i;
 		++n;
 	}
 	return (ret * sign);
@@ -91,6 +95,11 @@ char	*ft_convert_base(char *nbr, char *base_from, char *base_to)
 	ret = (char *)malloc(sizeof(char) * (digit + 1));
 	if (!ret)
 		return (NULL);
+	if (tmp_nbr < 0)
+	{
+		ret[0] = '-';
+		tmp_nbr *= -1;
+	}
 	ft_itoa_base(tmp_nbr, b_to, base_to, ret + digit - 1);
 	ret[digit] = 0;
 	return (ret);
