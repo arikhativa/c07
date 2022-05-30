@@ -6,7 +6,7 @@
 /*   By: yrabby <yrabby@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:27:58 by yrabby            #+#    #+#             */
-/*   Updated: 2022/05/30 13:34:21 by yrabby           ###   ########.fr       */
+/*   Updated: 2022/05/30 13:55:13 by yrabby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,10 +84,22 @@ int	get_base(char *s, long *res)
 	return (SUCCESS);
 }
 
-// long	count_digit_by_base(char *n, long base)
-// {
+long	count_digit_by_base(long n, long base)
+{
+	long	ret;
 
-// }
+	ret = 0;
+	if (n == 0)
+		return (1);
+	if (n < 0)
+		++ret;
+	while (n)
+	{
+		n /= base;
+		++ret;
+	}
+	return (ret);
+}
 
 long	get_num_by_base(char n, char *base)
 {
@@ -99,28 +111,19 @@ long	get_num_by_base(char n, char *base)
 	return (i);
 }
 
-long	ft_atoi_base(char *n, char *base)
+long	ft_atoi_base(char *n, char *base_str, long base)
 {
-	long	b;
 	long	ret;
-	long	i;
 	long	len;
 	long	sign;
 
 	n = skip_space(n);
 	n = skip_get_sign(n, &sign);
-	len = ft_strlen_check(n);
-	if (get_base(base, &b) == ERROR || len == ERROR)
-		return (0);
-	i = 0;
 	ret = 0;
-	printf("CC - %ld\n", b);
-	while (i < len)
+	while (*n)
 	{
-		ret = (ret * b) + get_num_by_base(*n, base);
-		printf("BB - %ld\n", ret);
+		ret = (ret * base) + get_num_by_base(*n, base_str);
 		++n;
-		++i;
 	}
 	return (ret * sign);
 }
@@ -130,40 +133,48 @@ void	ft_itoa_base(long n, long base, char *base_str, char *ret)
 {
 	if (n / base)
 	{
-		ft_itoa_base(n / base, base, base_str, ret + 1);
-		ft_itoa_base(n % base, base, base_str, ret + 1);
+		ft_itoa_base(n / base, base, base_str, ret - 1);
+		ft_itoa_base(n % base, base, base_str, ret);
 	}
 	if (n < base)
-		*ret = base_str[n - 1];
+		*ret = base_str[n];
 }
 
 char	*ft_convert_base(char *nbr, char *base_from, char *base_to)
 {
-	long	tmp;
+	long	tmp_nbr;
 	long	b_to;
+	long	b_from;
+	long	digit;
 	char	*ret;
 
-	ret = (char *)malloc(sizeof(char) * 1000);
-
-	// if (get_base(base_from, &b_from) == ERROR || get_base(base_to, &b_to) == ERROR)
-	// 	return (NULL);
-
 	
-	tmp = ft_atoi_base(nbr, base_from);
-	printf("AA - %ld\n", tmp);
-	get_base(base_to, &b_to);
-	ft_itoa_base(tmp, b_to, base_to, ret);
+	if (get_base(base_from, &b_from) == ERROR || get_base(base_to, &b_to) == ERROR)
+		return (NULL);
+		
+	// Check nbr!
+	// Check Neg
+	
+	tmp_nbr = ft_atoi_base(nbr, base_from, b_from);
+	digit = count_digit_by_base(tmp_nbr, b_to);
+	ret = (char *)malloc(sizeof(char) *  (digit + 1));
+	if (!ret)
+		return (NULL);
+	
+	ft_itoa_base(tmp_nbr, b_to, base_to, ret + digit - 1);
 
-	ret[1] = 0;
+	ret[digit] = 0;
 	return (ret);
 }
 
 int	main(void)
 {
-	char *n = "100";
-	char *b_from = "01";
-	// char *b_to = "0123456789";
+	char *n = "a";
+	char *b_from = "0123456789abcdef";
+	char *b_to = "01";
+	char *ret;
 
-	// printf("%s\n", ft_convert_base(n, b_from, b_to));
-	printf("%ld\n", ft_atoi_base(n, b_from));
+	ret = ft_convert_base(n, b_from, b_to);
+	printf("%s\n", ret);
+	free(ret);
 }
