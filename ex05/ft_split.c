@@ -6,7 +6,7 @@
 /*   By: yrabby <yrabby@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 15:04:25 by yrabby            #+#    #+#             */
-/*   Updated: 2022/05/30 15:55:00 by yrabby           ###   ########.fr       */
+/*   Updated: 2022/05/30 16:45:56 by yrabby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,17 @@ int	count_word(char *s, char* sep, unsigned int sep_len)
 	int	i;
 
 	i = 0;
-
+	while (ft_strncmp(s, sep, sep_len) == 0)
+		s = s + sep_len;
+	if (*s)
+		++i;
 	while (*s)
 	{
 		while (*s && *s != *sep)
 		{
 			++s;
 		}
-		if (ft_strncmp(s, sep, sep_len + 1) == 0)
+		if (ft_strncmp(s, sep, sep_len) == 0)
 		{
 			s = s + sep_len;
 			++i; // not true
@@ -62,19 +65,23 @@ int	count_word(char *s, char* sep, unsigned int sep_len)
 
 char	**ft_split(char *str, char *charset)
 {
-	unsigned int sep_len;
-	int c;
+	unsigned int	sep_len;
+	int				c;
+	char			*ret;
 
 	sep_len = 0;
 	while (charset[sep_len])
 		++sep_len;
 	c = count_word(str, charset, sep_len);
-	printf("%d\n", c);
+	ret = (char *)malloc(sizeof(char) * c + 1);
+	if (!ret)
+		return (NULL);
+	
 
-	return (NULL);
+	return (ret);
 }
 
 int	main(void)
 {
-	ft_split("a-b", "--");
+	ft_split("----------------", "--");
 }
