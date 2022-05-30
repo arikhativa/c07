@@ -6,7 +6,7 @@
 /*   By: yrabby <yrabby@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/29 18:25:29 by yrabby            #+#    #+#             */
-/*   Updated: 2022/05/30 12:25:37 by yrabby           ###   ########.fr       */
+/*   Updated: 2022/05/30 14:31:47 by yrabby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,8 @@ char	*ft_strjoin(int size, char **strs, char *sep)
 	char	*ret;
 	char	*runner;
 
-	ret = (char *)malloc(sizeof(char) * get_size_to_malloc(size, strs, ft_strlen(sep)));
+	ret = (char *)malloc(sizeof(char) * \
+		get_size_to_malloc(size, strs, ft_strlen(sep)));
 	if (!ret)
 		return (NULL);
 	runner = ret;
