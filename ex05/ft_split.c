@@ -6,18 +6,24 @@
 /*   By: yrabby <yrabby@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 15:04:25 by yrabby            #+#    #+#             */
-/*   Updated: 2022/05/30 17:47:32 by yrabby           ###   ########.fr       */
+/*   Updated: 2022/05/31 11:02:19 by yrabby           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 
+void	free_all(char **strs)
+{
+	int	i;
 
-
-
-
-
-#include <stdio.h>
+	i = 0;
+	while (strs[i] != NULL)
+	{
+		free(strs[i]);
+		++i;
+	}
+	free(strs);
+}
 
 int	ft_strncmp(char *s1, char *s2, unsigned int n)
 {
@@ -37,28 +43,20 @@ int	ft_strncmp(char *s1, char *s2, unsigned int n)
 	return (*s1 - *s2);
 }
 
-int	count_word(char *s, char* sep, unsigned int sep_len)
+int	count_word(char *s, char *sep, unsigned int sep_len)
 {
 	int	i;
 
 	i = 0;
 	while (ft_strncmp(s, sep, sep_len) == 0)
 		s = s + sep_len;
-	if (*s)
-		++i;
 	while (*s)
 	{
-		while (*s && *s != *sep)
-		{
+		++i;
+		while (*s && ft_strncmp(s, sep, sep_len) != 0)
 			++s;
-		}
-		if (ft_strncmp(s, sep, sep_len) == 0)
-		{
+		while (ft_strncmp(s, sep, sep_len) == 0)
 			s = s + sep_len;
-			++i;
-		}
-		else if (*s)
-			++s;
 	}
 	return (i);
 }
@@ -67,7 +65,7 @@ char	*create_str(char *s, char *sep, unsigned int sep_len, char **ret)
 {
 	int		i;
 	char	*new_str;
-	
+
 	i = 0;
 	while (s[i] && ft_strncmp(&(s[i]), sep, sep_len) != 0)
 		++i;
@@ -82,7 +80,6 @@ char	*create_str(char *s, char *sep, unsigned int sep_len, char **ret)
 		++new_str;
 	}
 	*new_str = 0;
-
 	return (s);
 }
 
@@ -97,44 +94,20 @@ char	**ft_split(char *str, char *charset)
 	while (charset[sep_len])
 		++sep_len;
 	c = count_word(str, charset, sep_len);
-	ret = (char **)malloc(sizeof(char *) * c + 1);
+	ret = (char **)malloc(sizeof(char *) * (c + 1));
 	if (!ret)
 		return (NULL);
 	ret[c] = NULL;
-	i = 0;
+	i = -1;
 	while (ft_strncmp(str, charset, sep_len) == 0)
 		str = str + sep_len;
-	while (i < c)
+	while (++i < c)
 	{
 		str = create_str(str, charset, sep_len, &(ret[i]));
-		// if (ret[i] == NULL)
-		// {
-		// 	free_all();
-		// }
+		if (ret[i] == NULL)
+			free_all(ret);
 		while (ft_strncmp(str, charset, sep_len) == 0)
 			str = str + sep_len;
-
-		++i;
 	}
 	return (ret);
-}
-
-void	print_arr(char **a)
-{
-	int	i = 0;
-
-	while (a[i] != NULL)
-	{
-		printf("%s\n", a[i]);
-		++i;
-	}
-}
-
-int	main(void)
-{
-	char **ret;
-
-	ret = ft_split("a--b--ffff--", "--");
-	print_arr(ret);
-
 }
