@@ -6,7 +6,7 @@
 /*   By: yoav <yoav@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:27:58 by yrabby            #+#    #+#             */
-/*   Updated: 2022/06/01 13:05:34 by yoav             ###   ########.fr       */
+/*   Updated: 2022/06/01 13:10:30 by yoav             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ long	ft_atoi_base(char *n, char *base_str, long base)
 	long	sign;
 	long	i;
 
+	if (*n == 0)
+		return (ATOI_ERROR);
 	n = skip_space(n);
 	n = skip_get_sign(n, &sign);
 	if (is_space(*n))
