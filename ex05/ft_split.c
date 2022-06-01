@@ -3,27 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrabby <yrabby@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yoav <yoav@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 15:04:25 by yrabby            #+#    #+#             */
-/*   Updated: 2022/05/31 11:02:19 by yrabby           ###   ########.fr       */
+/*   Updated: 2022/06/01 11:51:30 by yoav             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
-
-void	free_all(char **strs)
-{
-	int	i;
-
-	i = 0;
-	while (strs[i] != NULL)
-	{
-		free(strs[i]);
-		++i;
-	}
-	free(strs);
-}
 
 int	ft_strncmp(char *s1, char *s2, unsigned int n)
 {
@@ -105,7 +92,7 @@ char	**ft_split(char *str, char *charset)
 	{
 		str = create_str(str, charset, sep_len, &(ret[i]));
 		if (ret[i] == NULL)
-			free_all(ret);
+			return (ret);
 		while (ft_strncmp(str, charset, sep_len) == 0)
 			str = str + sep_len;
 	}

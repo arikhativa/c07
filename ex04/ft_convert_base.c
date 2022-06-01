@@ -3,17 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   ft_convert_base.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: yrabby <yrabby@student.42.fr>              +#+  +:+       +#+        */
+/*   By: yoav <yoav@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/30 12:27:58 by yrabby            #+#    #+#             */
-/*   Updated: 2022/05/30 14:59:44 by yrabby           ###   ########.fr       */
+/*   Updated: 2022/06/01 13:05:34 by yoav             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
+#include <limits.h>
 
-#define ERROR -1
-#define SUCCESS 0
+#define ATOI_ERROR	2147483648
+#define ERROR		-1
+#define SUCCESS		0
 
 int		is_space(char c);
 char	*skip_space(char *s);
@@ -56,6 +58,8 @@ long	ft_atoi_base(char *n, char *base_str, long base)
 
 	n = skip_space(n);
 	n = skip_get_sign(n, &sign);
+	if (is_space(*n))
+		return (ATOI_ERROR);
 	ret = 0;
 	while (*n)
 	{
@@ -91,6 +95,8 @@ char	*ft_convert_base(char *nbr, char *base_from, char *base_to)
 		get_base(base_to, &b_to) == ERROR)
 		return (NULL);
 	tmp_nbr = ft_atoi_base(nbr, base_from, b_from);
+	if (tmp_nbr < INT_MIN || tmp_nbr > INT_MAX || tmp_nbr == ATOI_ERROR)
+		return (NULL);
 	digit = count_digit_by_base(tmp_nbr, b_to);
 	ret = (char *)malloc(sizeof(char) * (digit + 1));
 	if (!ret)
